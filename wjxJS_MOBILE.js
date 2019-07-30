@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         wjxJS_MOBILE
-// @namespace    https://github.com/wkmyws/wjxJS/wjxJS_MOBILE
+// @namespace    https://github.com/wkmyws/wjxJS/wjxJS_MOBILE.js
 // @version      1.0
 // @description  问卷星填写信息，支持input radio checkbox，支持手机端网页
 // @author       wkmyws
