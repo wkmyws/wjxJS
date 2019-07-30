@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         wjxJS
 // @namespace    https://github.com/wkmyws/wjxJS
-// @version      1.0
-// @description  问卷星填写信息，支持input radio checkbox，仅支持电脑端网页
+// @version      1.1
+// @description  问卷星填写信息，支持input radio checkbox
 // @author       wkmyws
 // @match        https://www.wjx.cn/*
 // @grant        none
@@ -11,7 +11,6 @@
 // @supportURL   https://github.com/wkmyws/wjxJS
 // ==/UserScript==
 
-//使用电脑打开问卷（手机端请求桌面版本）
 
 /*
 **info 第一个参数:匹配的标题（正则表达式）
@@ -32,48 +31,42 @@
     ];
     const ini={
         module:".div_question",//每个问题模块
-        No:".div_topic_question",//题号
-        title:".div_title_question"//标题
-        //input:"(手动更新,根据class判断类型)id=q1 q2..."
+        title:".div_title_question",//标题
+        type:{
+           "input_text":".inputtext",
+           "radio":".ulradiocheck",
+           "checkbox":".ulradiocheck"
+        }
     };
     $(document).ready(function(){
-        if($(ini.module).length==0){//未到发布时间
-            setInterval(function(){$("#ctl00_ContentPlaceHolder1_JQ1_lbError").find("div").text(new Date().toLocaleTimeString())},1000)
-        }else
         $(ini.module).each(function(){
             let title=$(this).find(ini.title).text();
-            let No=$(this).find(ini.No).text().replace(/[^\d]*(\d+)[^\d]*/,function(all,num){return num-0})
+            let No=$(this).find(".div_topic_question").text()-0;
             //判断类别
             for(let i=0;i<info.length;i++){//匹配用户信息
                 if(info[i][0].test(title)){//匹配到一处信息,判断答题框类型,加break！
-                    if($("#q"+No).length>0){//input 型
-                        $("#q"+No).val(info[i][1])
-                        break;
-                    }
-                    if($(this).find(".ulradiocheck").length>0){//单选框|多选框
-                        $(this).find("li").each(function(){
-                            if(info[i].length<=2)return;//没有第三个参数则跳过
-                            if(info[i][2].test($(this).find("label").html())){//匹配到选项框
-                                //$(this).find("input[type='radio']").trigger("click")//单选框
-                                //$(this).find("input[type='checkbox']").trigger("click")//多选框
-                                 $(this).find("a").trigger("click")
-                            }
-                        })
-                        break;
-                    }
-
+                   for(let tp in ini.type){
+                       let dom=$(this).find(ini.type[tp])
+                       if(dom.length>0){
+                           switch(tp){
+                               case "input_text":
+                                   $("#q"+No).val(info[i][1]);
+                                   break;
+                               case "radio":
+                               case "checkbox":
+                                   $(this).find("li").each(function(){
+                                       if(info[i].length>=3&&info[i][2].test($(this).text()))$(this).find("a").click()
+                                   })
+                                   break;
+                               default:alert("ini.type中没有匹配"+tp+"的键值");
+                           }
+                           break;
+                       }
+                   }
+                    break;
                 }
             }
         })
     });
 
 })();
-
-
-
-
-
-
-
-
-
