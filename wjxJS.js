@@ -4,7 +4,7 @@
 // @version      1.1
 // @description  问卷星填写信息，支持input radio checkbox
 // @author       wkmyws
-// @match        https://www.wjx.cn/*
+// @match        https://www.wjx.*/*
 // @grant        none
 // @require      https://code.jquery.com/jquery-1.12.4.min.js
 // @updateURL    https://github.com/wkmyws/wjxJS
